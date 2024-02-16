@@ -1,20 +1,24 @@
+/**
+ * Conjunto de pruebas unitarias para un contrato inteligente que maneja donaciones.
+ * Se utiliza el framework de pruebas `ava` para definir y ejecutar las pruebas.
+ */
 import { Worker, NearAccount, NEAR } from 'near-workspaces';
 import anyTest, { TestFn } from 'ava';
-import { near } from 'near-sdk-js';
 
+// Define el tipo de las pruebas unitarias
 const test = anyTest as TestFn<{
   worker: Worker;
   accounts: Record<string, NearAccount>;
 }>;
 
+// Configura el entorno antes de cada prueba
 test.beforeEach(async (t) => {
-  // Init the worker and start a Sandbox server
   const worker = await Worker.init();
 
-  // Deploy contract
+  // Despliega el contrato
   const root = worker.rootAccount;
 
-  // define users
+  // Define usuarios
   const alice = await root.createSubAccount("alice", {
     initialBalance: NEAR.parse("30 N").toJSON(),
   });
@@ -25,35 +29,39 @@ test.beforeEach(async (t) => {
 
   const contract = await root.createSubAccount('test-account');
 
-  // Get wasm file path from package.json test script in folder above
+  // Obtiene la ruta del archivo wasm desde el script de prueba en el archivo package.json
   await contract.deploy(
     process.argv[2],
   );
 
-  // Save state for test runs, it is unique for each test
+  // Guarda el estado para las ejecuciones de prueba, es único para cada prueba
   t.context.worker = worker;
   t.context.accounts = { root, contract, alice, beneficiary };
 });
 
+// Limpia el entorno después de cada prueba
 test.afterEach.always(async (t) => {
-  // Stop Sandbox server
+  // Detiene el servidor Sandbox
   await t.context.worker.tearDown().catch((error) => {
     console.log('Failed to stop the Sandbox:', error);
   });
 });
 
+// Prueba específica: Donación hecha por Alice
 test('Donacion hecha por Alice', async (t) => {
   const { contract, alice, beneficiary } = t.context.accounts;
 
+  // Obtiene el saldo del beneficiario antes de la donación
   const balance = await beneficiary.balance();
   const available = parseFloat(balance.available.toHuman());
-  const accound_id = beneficiary.accountId;
 
-  await alice.call(contract, "donate", {beneficiary: "beneficiary.test.near"}, {attachedDeposit: NEAR.parse("1")})
+  // Realiza una donación desde la cuenta de Alice al contrato
+  await alice.call(contract, "donate", {beneficiary: beneficiary.accountId}, { attachedDeposit: NEAR.parse("10 N").toString()} )
 
+  // Obtiene el nuevo saldo del beneficiario después de la donación
   const new_balance = await beneficiary.balance();
   const new_available = parseFloat(new_balance.available.toHuman());
 
-  t.is(new_available, available );
+  // Verifica que el nuevo saldo sea igual al saldo anterior más la donación menos una pequeña cantidad para cubrir las tarifas
+  t.is(new_available, available + 10 - 0.001);
 });
-
