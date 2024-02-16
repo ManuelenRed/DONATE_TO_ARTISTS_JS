@@ -47,8 +47,8 @@ class DonateToArtistContract {
       this.donations.push(newDonation);
     }
 
-    // Registra en el log un mensaje de agradecimiento para validar los datos
-    near.log(`Thank you ${donor} for donating ${donationAmount}! You donated a total of ${toTransfer} to ${beneficiary}`)
+    // Registra en el log un mensaje de agradecimiento, uso para validar los datos
+    near.log(`Gracias ${donor} por donar ${donationAmount}! Tu donacion total es de ${toTransfer} para ${beneficiary}`)
 
     // Crea un batch de promesas para transferir los fondos al beneficiario, lo que indica que si alguna función no se ejecuta ninguna lo hará
     const promise = near.promiseBatchCreate(beneficiary);

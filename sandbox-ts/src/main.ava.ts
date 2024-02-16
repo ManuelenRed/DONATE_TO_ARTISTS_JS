@@ -19,11 +19,11 @@ test.beforeEach(async (t) => {
   const root = worker.rootAccount;
 
   // Define usuarios
-  const alice = await root.createSubAccount("alice", {
+  const alice = await root.createSubAccount("manuelinvierte", {
     initialBalance: NEAR.parse("30 N").toJSON(),
   });
 
-  const beneficiary = await root.createSubAccount("beneficiary", {
+  const beneficiary = await root.createSubAccount("silentadc", {
     initialBalance: NEAR.parse("30 N").toJSON(),
   });
 
@@ -62,6 +62,14 @@ test('Donacion hecha por Alice', async (t) => {
   const new_balance = await beneficiary.balance();
   const new_available = parseFloat(new_balance.available.toHuman());
 
+  // Calcula la diferencia entre los valores y compara si es menor que una tolerancia dado a que la linea 74 da error por una diferencia minima
+  function isCloseTo(a: number, b: number, tolerance: number = 0.000001): boolean {
+    return Math.abs(a - b) < tolerance;
+  }
+
+  // Utiliza la función isCloseTo para comparar los saldos
+  t.true(isCloseTo(new_available, available + 10 - 0.001));
+
   // Verifica que el nuevo saldo sea igual al saldo anterior más la donación menos una pequeña cantidad para cubrir las tarifas
-  t.is(new_available, available + 10 - 0.001);
+  //t.is(new_available, available + 10 - 0.001);
 });
