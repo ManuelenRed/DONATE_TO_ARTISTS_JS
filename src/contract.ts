@@ -15,6 +15,8 @@ class DonateToArtistContract {
     let donationAmount: bigint = near.attachedDeposit() as bigint;
     
     let toTransfer = donationAmount;
+    
+    near.log(`Cuenta del beneficiario: ${beneficiary.substring}`)
 
     // Encuentra el registro de donación para el donante y el beneficiario en caso de que ya haya donado
     let donationIndex = this.findDonationIndex(donor, beneficiary);
@@ -37,6 +39,8 @@ class DonateToArtistContract {
       this.donations.push(newDonation);
     }
 
+    near.log(`Thank you ${donor} for donating ${donationAmount}! You donated a total of ${toTransfer} to ${beneficiary}`)
+
     const promise = near.promiseBatchCreate(beneficiary);
     near.promiseBatchActionTransfer(promise, toTransfer);
   }
@@ -45,7 +49,7 @@ class DonateToArtistContract {
   findDonationIndex(donor: string, beneficiary: string) {
     for (let i = 0; i < this.donations.length; i++) {
       let donation = this.donations[i];
-      if (donation.account_id_donor == donor && donation.accound_id_beneficiary == beneficiary) {
+      if (donation.account_id_donor == donor && donation.account_id_beneficiary == beneficiary) {
         return i;
       }
     }

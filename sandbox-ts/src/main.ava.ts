@@ -49,7 +49,7 @@ test('Donacion hecha por Alice', async (t) => {
   const available = parseFloat(balance.available.toHuman());
   const accound_id = beneficiary.accountId;
 
-  await alice.call(contract, "donate", {beneficiary: accound_id}, {attachedDeposit: NEAR.parse("1")})
+  await alice.call(contract, "donate", {beneficiary: "beneficiary.test.near"}, {attachedDeposit: NEAR.parse("1")})
 
   const new_balance = await beneficiary.balance();
   const new_available = parseFloat(new_balance.available.toHuman());
