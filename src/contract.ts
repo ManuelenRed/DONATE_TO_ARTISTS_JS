@@ -73,4 +73,20 @@ class DonateToArtistContract {
   get_donations({ from_index = 0, limit = 10 }: { from_index: number, limit: number }): Donation[] {
     return this.donations.toArray().slice(from_index, from_index + limit);
   }
+
+  @view({})
+  get_donation({ account_id} : {account_id: string}): bigint {
+    let total_donated: bigint = BigInt(0);
+    // Se transforma el vector en un array para recorrerlo
+    const donationsArray = this.donations.toArray();
+    for (let i = 0; i < donationsArray.length; i++) {
+      let donation = donationsArray[i];
+      if (donation.account_id_beneficiary == account_id) {
+        total_donated += donation.total_amount;
+      }
+    }
+    return total_donated;
+    
+  }
+
 }

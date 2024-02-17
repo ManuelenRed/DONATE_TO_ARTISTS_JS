@@ -61,14 +61,6 @@ cargo-near near create-dev-account use-random-account-id autogenerate-new-keypai
 ### 4. Desplegar el contrato en la cuenta creada
 Despliega tu contrato en un entorno de prueba 
 
-Primero inicie sesión
-
-```bash
-near login
-```
-
-Ahora despliegue
-
 ```bash
 near deploy <id-account-created> build/donate_to_artists.wasm 
 ```
@@ -84,5 +76,5 @@ near call <id-account-created> donate '{"beneficiary": "<account-beneficary-id>"
 Con el siguiente comando podrá ver las donaciones echas
 
 ```bash
-near view plausible-title.testnet get_donations```
+near view <id-account-created> get_donations
 ---
