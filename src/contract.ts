@@ -37,7 +37,7 @@ class DonateToArtistContract {
 
     } else {
       // Si es una nueva donación, verifica que el monto sea mayor al costo de almacenamiento y envia los datos a la función en utils.ts
-      assert(donationAmount > STORAGE_COST, `Attach at least ${STORAGE_COST} yoctoNEAR`);
+      assert(donationAmount > STORAGE_COST, `El envío es de ${STORAGE_COST} yoctoNEAR`);
       
       // Resta el costo de almacenamiento al monto a transferir
       toTransfer -= STORAGE_COST
