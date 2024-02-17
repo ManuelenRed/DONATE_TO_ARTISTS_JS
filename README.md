@@ -21,8 +21,11 @@ Este contrato fue creado para la certificación Near Certified Development de Op
 ---
 
 ## Requerimientos previos
-1. Tener nodejs instalado (En el caso de windows tenerlo sobre wsl)
+(En el caso de windows tenerlo sobre wsl)
+
+1. Tener nodejs instalado 
 2. Tener near-cli instalado
+3. Tener cargo-near instalado 
 
 # Cómo probar este contrato
 
