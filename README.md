@@ -47,7 +47,15 @@ npm run build
 npm run test
 ```
 
-### 3. Desplegar el contrato en una cuenta de prueba
+### 3. Crear una cuenta aleatoria
+Cree una cuenta aleatoria donde desplegar el contrato
+
+```bash
+cargo-near near create-dev-account use-random-account-id autogenerate-new-keypair save-to-legacy-keychain network-config testnet create
+```
+
+
+### 4. Desplegar el contrato en la cuenta creada
 Despliega tu contrato en un entorno de prueba 
 
 Primero inicie sesión
@@ -59,13 +67,19 @@ near login
 Ahora despliegue
 
 ```bash
-near deploy <account-id> build/donate_to_artists.wasm 
+near deploy <id-account-created> build/donate_to_artists.wasm 
 ```
 
-### 4. Realizar donación
+### 5. Realizar donación
+
+Llame el contrato desde la cuenta creada y el la cuenta beneficiaria cambiela por una de prueba
 
 ```bash
-near call <account-id> donate '{"beneficiary": "<account-beneficary-id>"}' --amount 1 --accountId <account-id>
+near call <id-account-created> donate '{"beneficiary": "<account-beneficary-id>"}' --amount 1 --accountId <id-account-created>
 ```
+### 6. Revise las donaciones echas
+Con el siguiente comando podrá ver las donaciones echas
 
+```bash
+near view plausible-title.testnet get_donations```
 ---

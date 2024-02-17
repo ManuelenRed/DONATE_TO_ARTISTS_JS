@@ -57,6 +57,7 @@ class DonateToArtistContract {
 
   // Encuentra el índice de la donación en el vector, recorriendo de acuerdo al tamaño del vector de donaciones
   findDonationIndex(donor: string, beneficiary: string): number {
+    // Se transforma el vector en un array para recorrerlo
     const donationsArray = this.donations.toArray();
     for (let i = 0; i < donationsArray.length; i++) {
       let donation = donationsArray[i];
@@ -67,6 +68,7 @@ class DonateToArtistContract {
     return -1;
   }
 
+  // Ver las primeras diez donaciones
   @view({})
   get_donations({ from_index = 0, limit = 10 }: { from_index: number, limit: number }): Donation[] {
     return this.donations.toArray().slice(from_index, from_index + limit);
