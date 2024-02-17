@@ -22,8 +22,8 @@ export class Donation {
  * @param beneficiary La dirección del beneficiario
  * @param donationAmount EL monto que ha donado
  */
-  constructor(donor: string, beneficiary: string, donationAmount: bigint) {
-    // Asigna el identificador de la cuenta del donante
+constructor(donor: string, beneficiary: string, donationAmount: bigint) {
+  // Asigna el identificador de la cuenta del donante
     this.account_id_donor = donor;
     // Asigna el identificador de la cuenta del beneficiario
     this.account_id_beneficiary = beneficiary;

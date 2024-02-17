@@ -11,13 +11,13 @@ import { assert } from './utils'
 @NearBindgen({})
 class DonateToArtistContract {
   // Vector para almacenar las donaciones, la clase esta en el archivo model.ts
-  donations: Vector<Donation> = new Vector<Donation>("v-donations");
+  donations: Vector<Donation> = new Vector<Donation>("v-uid");
 
   // Función que permite a un usuario hacer una donación
   @call({ payableFunction: true })
-  donate({ beneficiary }: { beneficiary: string }) {
-    // Obtiene la cuenta que llama al método y los NEAR transferidos
-    let donor = near.predecessorAccountId();
+
+  donate({ beneficiary }: { beneficiary: string }) {    // Obtiene la cuenta que llama al método y los NEAR transferidos
+    let donor  = near.predecessorAccountId();
     let donationAmount: bigint = near.attachedDeposit() as bigint;
 
     // Almacena el monto que se va a donar descontando el costo de almacenamiento si aplica
@@ -27,11 +27,11 @@ class DonateToArtistContract {
     near.log(`Cuenta del beneficiario: ${beneficiary}`)
 
     // Llama a la funcion que busca en el vector si el donante ya le ha donado al artista antes y almacena el indice en el vector
-    let donationIndex = this.findDonationIndex(donor, beneficiary);
+    let donationIndex = this.findDonationIndex(donor , beneficiary);
 
     // Si el donante ya ha donado obtiene un indice positivo, actualiza la donación existente con el monto que transfirio en el vector
     if (donationIndex >= 0) {
-      let existingDonation = this.donations[donationIndex];
+      const existingDonation = this.donations.get(donationIndex);
       existingDonation.total_amount += donationAmount;
       this.donations.replace(donationIndex, existingDonation);
 
@@ -48,7 +48,7 @@ class DonateToArtistContract {
     }
 
     // Registra en el log un mensaje de agradecimiento, uso para validar los datos
-    near.log(`Gracias ${donor} por donar ${donationAmount}! Tu donacion total es de ${toTransfer} para ${beneficiary}`)
+    near.log(`Gracias ${donor } por donar ${donationAmount}! Tu donacion total es de ${toTransfer} para ${beneficiary}`)
 
     // Crea un batch de promesas para transferir los fondos al beneficiario, lo que indica que si alguna función no se ejecuta ninguna lo hará
     const promise = near.promiseBatchCreate(beneficiary);
@@ -56,16 +56,19 @@ class DonateToArtistContract {
   }
 
   // Encuentra el índice de la donación en el vector, recorriendo de acuerdo al tamaño del vector de donaciones
-  findDonationIndex(donor: string, beneficiary: string) {
-    for (let i = 0; i < this.donations.length; i++) {
-      let donation = this.donations[i];
-      near.log(`Donador recorrido: ${donation}`)
-      // en caso de encontrar una considencias retorna el indice
+  findDonationIndex(donor: string, beneficiary: string): number {
+    const donationsArray = this.donations.toArray();
+    for (let i = 0; i < donationsArray.length; i++) {
+      let donation = donationsArray[i];
       if (donation.account_id_donor == donor && donation.account_id_beneficiary == beneficiary) {
         return i;
       }
     }
-    // sino hay considencias retorna -1
     return -1;
-  }  
+  }
+
+  @view({})
+  get_donations({ from_index = 0, limit = 10 }: { from_index: number, limit: number }): Donation[] {
+    return this.donations.toArray().slice(from_index, from_index + limit);
+  }
 }
