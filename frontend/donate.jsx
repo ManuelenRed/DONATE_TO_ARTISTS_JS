@@ -1,4 +1,4 @@
-let beneficiary = props.beneficiary || "silentadc.testnet";
+let beneficiary = props.beneficiary || "silentadc.near";
 
 // Inicialización del estado con un objeto que contiene la cantidad y el beneficiario
 initState({ amount: 1, beneficiary });
