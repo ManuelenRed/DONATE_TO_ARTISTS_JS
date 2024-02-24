@@ -5,7 +5,7 @@
 Este contrato fue creado para la certificación Near Certified Development de Open Web Academy. El objetivo de este contrato es permitir las donaciones a cuentas específicas, pensando inicialmente para que los fanáticos donen $NEAR a artistas.
 
 ***Actualización
-Se actualiza este repositorio para la certificación de Blockchain System Operator, permitiendo crear una interfaz descentralizada
+Se actualiza este repositorio para la certificación de BOS (Blockchain Operating System), permitiendo crear una interfaz descentralizada
 
 ## Lo que se muestra tecnicamente en este ejemplo
 
