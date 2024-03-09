@@ -2,7 +2,7 @@
 let beneficiary = props.beneficiary || "manuelenred.testnet";
 
 //  Contrato para donar
-const donateContract = "plausible-title.testnet"
+const donateContract = "plausible-title.testnet";
 
 // Inicialización del estado con un objeto que contiene la cantidad y el beneficiario
 initState({ amount: 1, beneficiary });
@@ -10,7 +10,7 @@ initState({ amount: 1, beneficiary });
 // Función que realiza una llamada a un contrato en la red Near para hacer una donación
 const donate = () => {
   Near.call(
-    "plausible-title.testnet",
+    donateContract,
     "donate",
     { beneficiary: state.beneficiary },
     "30000000000000",
@@ -18,19 +18,11 @@ const donate = () => {
   );
 };
 
-// Función que actualiza el estado con la cantidad ingresada
-const onChangeAmount = (amount) => {
+// Función que actualiza las variables de estado
+const onChange = (key, value) =>
   State.update({
-    amount,
+    [key]: value,
   });
-};
-
-// Función que actualiza el estado con el beneficiario ingresado
-const onChangebeneficiary = (beneficiary) => {
-  State.update({
-    beneficiary,
-  });
-};
 
 // Definición de estilos CSS
 const styles = {
@@ -87,7 +79,7 @@ return (
       <input
         style={styles.input}
         placeholder={state.beneficiary}
-        onChange={(e) => onChangebeneficiary(e.target.value)}
+        onChange={(e) => onChange("beneficiary", e.target.value)}
       />
     </div>
 
@@ -98,7 +90,7 @@ return (
         style={styles.input}
         type="number"
         placeholder={state.amount}
-        onChange={(e) => onChangeAmount(e.target.value)}
+        onChange={(e) => onChange("amount", e.target.value)}
       />
     </div>
 
@@ -113,7 +105,7 @@ return (
         disabled={context.loading}
         onClick={donate}
       >
-        Enviar {state.amount} NEAR a {state.beneficiary}
+        Enviar {state.amount} Ⓝ a {state.beneficiary}
       </button>
     ) : (
       <button
