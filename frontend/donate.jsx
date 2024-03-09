@@ -1,4 +1,8 @@
-let beneficiary = props.beneficiary || "silentadc.near";
+// En cao de no haber un beneficiario se asigna uno predeterminado
+let beneficiary = props.beneficiary || "manuelenred.testnet";
+
+//  Contrato para donar
+const donateContract = "plausible-title.testnet"
 
 // Inicialización del estado con un objeto que contiene la cantidad y el beneficiario
 initState({ amount: 1, beneficiary });
@@ -68,14 +72,17 @@ const styles = {
   h5: {
     marginBottom: "20px",
   },
+  h3: {
+    marginBottom: "20px",
+  },
 };
 
 // Renderizado de elementos JSX con estilos
 return (
   <div style={styles.container}>
-    <h1 style={styles.title}>Apoya a tu artista a crecer</h1>
+    <h1 style={styles.h3}>Datos del artista</h1>
     <div className="col-lg-6 p-2 p-md-3">
-      <h5 style={styles.h5}>Dirección del artista</h5>
+      <h5 style={styles.h5}>Dirección de la billetera</h5>
       {/* Input para ingresar la dirección del beneficiario */}
       <input
         style={styles.input}
@@ -85,7 +92,7 @@ return (
     </div>
 
     <div className="col-lg-6 p-2 p-md-3">
-      <h5 style={styles.h5}>Cantidad a donar</h5>
+      <h5 style={styles.h5}>Cantidad en NEAR a donar</h5>
       {/* Input para ingresar la cantidad a donar */}
       <input
         style={styles.input}
@@ -96,16 +103,29 @@ return (
     </div>
 
     {/* Botón para realizar la donación */}
-    <button
-      style={
-        context.loading
-          ? { ...styles.button, ...styles.buttonDisabled }
-          : styles.button
-      }
-      disabled={context.loading}
-      onClick={donate}
-    >
-      Donar {state.amount} NEAR a {state.beneficiary}
-    </button>
+    {context.accountId ? (
+      <button
+        style={
+          context.loading
+            ? { ...styles.button, ...styles.buttonDisabled }
+            : styles.button
+        }
+        disabled={context.loading}
+        onClick={donate}
+      >
+        Enviar {state.amount} NEAR a {state.beneficiary}
+      </button>
+    ) : (
+      <button
+        style={
+          context.loading
+            ? { ...styles.button, ...styles.buttonDisabled }
+            : styles.button
+        }
+        disabled={context.loading}
+      >
+        Debes iniciar sesion para donar
+      </button>
+    )}
   </div>
 );
