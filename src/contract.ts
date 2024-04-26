@@ -2,7 +2,7 @@
 import { NearBindgen, near, call, view, initialize, Vector } from 'near-sdk-js'
 
 // Importa la clase Donation y la constante STORAGE_COST desde el archivo model.ts
-import { Donation, STORAGE_COST } from './model'
+import { Donation, STORAGE_COST, Project, ProyectFunding } from './model'
 
 // Importa la función assert desde utils.ts
 import { assert } from './utils'
@@ -15,7 +15,6 @@ class DonateToArtistContract {
 
   // Función que permite a un usuario hacer una donación
   @call({ payableFunction: true })
-
   donate({ beneficiary }: { beneficiary: string }) {    // Obtiene la cuenta que llama al método y los NEAR transferidos
     let donor  = near.predecessorAccountId();
     let donationAmount: bigint = near.attachedDeposit() as bigint;
@@ -90,3 +89,119 @@ class DonateToArtistContract {
   }
 
 }
+
+// Anotación para indicar que esta clase se vinculará con NEAR
+@NearBindgen({})
+class ManagmentProject {
+  // Vector que almacena los proyectos creados
+  proyects: Vector<Project> = new Vector<Project>("v-uid");
+  projectFundings: Vector<ProyectFunding> = new Vector<ProyectFunding>("v-uid");
+
+  @call({})
+  createProyect({project_name, description} : {project_name: string, description: string}): void{
+    // Se asigna como dueño a la wallet que llama la función
+    let owner  = near.predecessorAccountId();
+    // Crea un nuevo proyecto
+    let newProject = new Project(project_name, owner, description);
+    // Se agrega al vector de proyectos
+    this.proyects.push(newProject);
+    // Obtiene el índice del proyecto recién creado
+    const projectIndex = this.proyects.length - 1;
+    // Log para validar que se haya creado el proyecto y su índice
+    near.log(`Se ha creado el proyecto ${project_name} que consiste en ${description}. El dueño es ${owner}. Índice del proyecto: ${projectIndex}`);
+    }
+
+  // @call({ payableFunction: true })
+  // donateToProject({ project_index }: { project_index: number }): void {
+  //     // Obtiene el proyecto en el índice dado
+  //     const projects = this.proyects.toArray();
+  //     const project = projects[project_index]
+
+  //     near.log(`Se quiere donar al proyecto: ${project}`);
+  //     // Verificar si el índice del proyecto está dentro del rango válido
+  //     assert(project_index >= 0 && project_index < this.proyects.length, "Proyecto no encontrado");
+
+  //     // Obtiene la cuenta del donante
+  //     const donor = near.predecessorAccountId();
+
+  //     // Obtiene el valor que se va a donar
+  //     let donationAmount: bigint = near.attachedDeposit() as bigint;
+  //     // Se crea una variable de apoyo para descontar el valor de almacenamiento 
+  //     let toTransfer = donationAmount;
+  //     // Se valida si el valor a donar es mayor al de almacenamiento
+  //     assert(donationAmount > STORAGE_COST, `El envío es de ${STORAGE_COST} yoctoNEAR`);
+  //     // Resta el costo de almacenamiento al monto a transferir
+  //     toTransfer -= STORAGE_COST
+  //     // Crea una nueva instancia de ProjectFunding y se envian los valores 
+  //     const projectFunding = new ProyectFunding(donor, project, toTransfer);
+
+  //     // Crea un batch de promesas para transferir los fondos al dueño del proyecto, lo que indica que si alguna función no se ejecuta ninguna lo hará
+  //     const promise = near.promiseBatchCreate(project.account_id_owner);
+  //     near.promiseBatchActionTransfer(promise, toTransfer);
+
+  //     // Actualiza el monto total donado al proyecto
+  //     project.total_amount += toTransfer;
+
+  //     // Registra el proyecto de financiamiento
+  //     this.projectFundings.push(projectFunding);
+
+  //     // Log para validar que se haya realizado la donación
+  //     near.log(`Se ha realizado una donación de ${toTransfer} NEAR al proyecto ${project.name} por ${donor}`);
+  //   }
+   
+  // Ver todos los proyectos
+  @view({})
+  getAllProjects(): Project[] {
+      return this.proyects.toArray();
+  }
+
+    // Ver el listado de proyectos de acuerdo al dueño
+  @view({})
+  getProjectsByOwner({ owner_id }: { owner_id: string }): Project[] {
+      let ownerProjects: Project[] = [];
+
+      // Filtrar los proyectos propiedad del dueño dado
+      for (let i = 0; i < this.proyects.length; i++) {
+          const project = this.proyects[i];
+          if (project.account_id_owner === owner_id) {
+              ownerProjects.push(project);
+          }
+      }
+
+      return ownerProjects;
+    }
+
+  // // Ver el total donado a un dueño (artista)
+  // @view({})
+  // getTotalDonatedToOwner({ owner_id }: { owner_id: string }): bigint {
+  //     let totalDonatedToOwner: bigint;
+
+  //     // Iterar a través de todos los proyectos
+  //     for (let i = 0; i < this.projectFundings.length; i++) {
+  //         const funding = this.projectFundings[i];
+  //         // Verificar si el dueño del proyecto coincide con el owner_id proporcionado
+  //         if (funding.proyect.account_id_owner === owner_id) {
+  //             totalDonatedToOwner += funding.total_amount;
+  //         }
+  //     }
+
+  //     return totalDonatedToOwner;
+  // }
+
+  //   // Ver el total donado de acuerdo al nombre de un proyecto
+  // @view({})
+  // getTotalDonatedForProject({ project_name }: { project_name: string }): bigint {
+  //     let totalDonated: bigint;
+
+  //     // Sumar todas las donaciones para el proyecto dado
+  //     for (let i = 0; i < this.projectFundings.length; i++) {
+  //         const funding = this.projectFundings[i];
+  //         if (funding.proyect.name === project_name) {
+  //             totalDonated += funding.total_amount;
+  //         }
+  //     }
+
+  //     return totalDonated;
+  // }
+  }
+

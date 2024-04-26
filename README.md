@@ -2,20 +2,21 @@
 
 [![](https://img.shields.io/badge/Contract-js-yellow)](https://docs.near.org/develop/contracts/anatomy)
 
-Este contrato fue creado para la certificación Near Certified Development de Open Web Academy. El objetivo de este contrato es permitir las donaciones a cuentas específicas, pensando inicialmente para que los fanáticos donen $NEAR a artistas.
-
 ***Actualización
-Se actualiza este repositorio para la certificación de BOS (Blockchain Operating System), permitiendo crear una interfaz descentralizada
+Este contrato fue creado para la certificación Near Certified Development de Open Web Academy, en la primera y tercera edición del año 2024. El objetivo de este contrato era permitir las donaciones a cuentas específicas, pensando inicialmente para que los fanáticos donen $NEAR a artistas. Con esta actualización se modifica el contrato inteligente y el modelo para permitir crear proyectos y donar a ellos, pensado para que los artistas puedan crearlos y recibir financiamiento para realizarlos.
+
+El frontend de este proyecto solo contempla el la versión inicial la fue creada en la certificación de BOS (Blockchain Operating System).
 
 ## Lo que se muestra tecnicamente en este ejemplo
 
 1. Manejo de vectores para almacenar y gestionar las donaciones realizadas por los usuarios. 
-2. Uso de funciones de llamada (call) para permitir a los usuarios realizar donaciones y de consultar (view) para ver de información de las donaciones respectivamente.
-3. Uso de la función near.log para registrar información útil durante la ejecución del contrato, como la cuenta del beneficiario y mensajes de agradecimiento por las donaciones.
-4. Uso de la función near.promiseBatchCreate para crear un lote de promesas para transferir los fondos al beneficiario, garantizando que las transferencias se realicen de manera segura incluso si una de las funciones no se ejecuta correctamente.
-5. Uso de subcomponentes en BOS, lo que permite modularidad y un mejor desarrollo de la Dapp
-6. Llamada de contratos apartir de una interfaz de usuario
-7. Manejo de estilos css desde un componente usando objetos
+2. Uso de funciones de llamada (call) para permitir a los usuarios realizar donaciones, crear proyectos y fondearlos.
+3. Uso de funciones de consulta (view) consultar para ver todas las donaciones hechas, las donaciones hechas a un artista, ver todos los proyectos, los proyectos de un artista, el valor total donado a un proyecto y el valor total donado a un artista para proyectos.
+4. Uso de la función near.log para registrar información útil durante la ejecución del contrato, como la cuenta del beneficiario y mensajes de agradecimiento por las donaciones.
+5. Uso de la función near.promiseBatchCreate para crear un lote de promesas para transferir los fondos al beneficiario, garantizando que las transferencias se realicen de manera segura incluso si una de las funciones no se ejecuta correctamente.
+6. Uso de subcomponentes en BOS, lo que permite modularidad y un mejor desarrollo de la Dapp
+7. Llamada de contratos apartir de una interfaz de usuario
+8. Manejo de estilos css desde un componente usando objetos
 
 ## Lo destacado en este aprendizaje como desarrollador en la Near
 
@@ -69,12 +70,11 @@ Cree una cuenta aleatoria donde desplegar el contrato
 cargo-near near create-dev-account use-random-account-id autogenerate-new-keypair save-to-legacy-keychain network-config testnet create
 ```
 
-
 ### 4. Desplegar el contrato en la cuenta creada
-Despliega tu contrato en un entorno de prueba 
+Despliega tu contrato en un entorno de prueba, quite el los simbolos <luego de escribir la cuenta dentro>
 
 ```bash
-near deploy <id-account-created> build/donate_to_artists.wasm 
+near deploy dynamic-jewel.testnet build/donate_to_artists.wasm 
 ```
 
 ### 5. Realizar donación
@@ -89,4 +89,25 @@ Con el siguiente comando podrá ver las donaciones echas
 
 ```bash
 near view <id-account-created> get_donations
+---
+
+### 7. Crear un proyecto
+Llame la función que crea el proyecto y agregue los datos que desee
+
+```bash
+near call dynamic-jewel.testnet createProyect '{"project_name": "nombre del proyecto", "description": "descripcion del proyecto"}' --accountId dynamic-jewel.testnet
+---
+
+### 8. Ver proyectos
+Con el siguiente comando podrá ver los proyectos creados
+
+```bash
+near view dynamic-jewel.testnet get_donations
+---
+
+### 9. Fondear un proyecto
+Ahora llame la función que se encarga de crear el proyecto y agregue el indixe del proyecto el cual aparece en el log al crear el proyecto
+
+```bash
+near call zonked-rod.testnet donateToProject '{"project_index": "0"}' --amount 1 --accountId zonked-rod.testnet
 ---

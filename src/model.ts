@@ -31,3 +31,42 @@ constructor(donor: string, beneficiary: string, donationAmount: bigint) {
     this.total_amount = donationAmount;
   }
 }
+
+export class Project {
+  // Nombre del proyecto
+  name: string;
+  // Dueño del proyecto
+  account_id_owner: string;
+  // Descripcion del proyecto
+  description: string;
+  // Total donado
+  total_amount: bigint;
+
+  constructor(name: string, owner: string, description: string) {
+    // Asignamos el nombre del proyecto
+    this.name = name;
+    // Asignamos el identificador del dueño del proyecto
+    this.account_id_owner = owner;
+    // Asignamos la descripcion del proyecto
+    this.description = description;
+  }
+}
+
+export class ProyectFunding {
+  // Asignamos el identificador del donador
+  donor: string;
+  // Asignamos el proyecto que se fondea
+  proyect: Project;
+  // Asignamos el monto que se ha donado
+  total_amount: bigint;
+
+  constructor(donor: string, proyect: Project, donatioAmount: bigint){
+    // Asignamos el identificador del donador
+    this.donor = donor;
+    // Asignamos el proyecto que se fondea
+    this.proyect = proyect;
+    // Asignamos el monto que se ha donado
+    this.total_amount = donatioAmount;
+  }
+}
+
