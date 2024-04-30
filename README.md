@@ -11,7 +11,7 @@ El frontend de este proyecto solo contempla el la versión inicial la fue creada
 
 1. Manejo de vectores para almacenar y gestionar las donaciones realizadas por los usuarios. 
 2. Uso de funciones de llamada (call) para permitir a los usuarios realizar donaciones, crear proyectos y fondearlos.
-3. Uso de funciones de consulta (view) consultar para ver todas las donaciones hechas, las donaciones hechas a un artista, ver todos los proyectos, los proyectos de un artista, el valor total donado a un proyecto y el valor total donado a un artista para proyectos.
+3. Uso de funciones de consulta (view) consultar para ver todas las donaciones hechas, las donaciones hechas a un artista, ver todos los proyectos, los proyectos de un artista
 4. Uso de la función near.log para registrar información útil durante la ejecución del contrato, como la cuenta del beneficiario y mensajes de agradecimiento por las donaciones.
 5. Uso de la función near.promiseBatchCreate para crear un lote de promesas para transferir los fondos al beneficiario, garantizando que las transferencias se realicen de manera segura incluso si una de las funciones no se ejecuta correctamente.
 6. Uso de subcomponentes en BOS, lo que permite modularidad y un mejor desarrollo de la Dapp
