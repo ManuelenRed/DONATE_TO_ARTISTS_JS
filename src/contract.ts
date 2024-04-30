@@ -97,6 +97,7 @@ class ManagmentProject {
   proyects: Vector<Project> = new Vector<Project>("v-uid");
   projectFundings: Vector<ProyectFunding> = new Vector<ProyectFunding>("v-uid");
 
+  // Función que permite crear un proyecto
   @call({})
   createProyect({project_name, description} : {project_name: string, description: string}): void{
     // Se asigna como dueño a la wallet que llama la función
@@ -111,6 +112,7 @@ class ManagmentProject {
     near.log(`Se ha creado el proyecto ${project_name} que consiste en ${description}. El dueño es ${owner}. Índice del proyecto: ${projectIndex}`);
     }
 
+  // Función que permite donar a un proyecto y enviar directamente al creador del proyecto
   @call({ payableFunction: true })
   donateToProject({ project_index }: { project_index: number }): void {
       // Obtiene el proyecto en el índice dado
