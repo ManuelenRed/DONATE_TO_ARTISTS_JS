@@ -136,23 +136,6 @@ test('Donacion hecha por Manuel Invierte a Semk', async (t) => {
   //t.is(new_available, available + 10 - 0.001);
 });
 
-// Prueba especifica: Crear proyecto por Silent ADC
-test('Proyecto creado por Silent ADC', async (t) => {
-  const { contract, silent, semk} = t.context.accounts;
-  let project_name = "Rap para el universo";
-  let description = "Desde lo mas profundo";
-  await silent.call(contract, "createProyect", {project_name: project_name, description: description})
-  
-});
-
-// Prueba especifica: Crear proyecto por Semk
-test('Proyecto creado por Semk', async (t) => {
-  const { contract, semk} = t.context.accounts;
-  let project_name = "Hambriento";
-  let description = "Desde lo mas astral";
-  await semk.call(contract, "createProyect", {project_name: project_name, description: description})
-  
-});
 
 // Prueba especifica: Crear proyecto por Ronin
 test('Proyecto creado por Ronin', async (t) => {
@@ -160,5 +143,18 @@ test('Proyecto creado por Ronin', async (t) => {
   let project_name = "Ambiguo";
   let description = "Desde lo mas profundo de mis sentimientos";
   await ronin.call(contract, "createProyect", {project_name: project_name, description: description});
-  await silent.call(contract, "donateToProject", {project_index: "0"});
+});
+
+// Prueba especifica: Donación hecha por Silent al Proyecto de Ronin
+test('Donación hecha por Silent a Ronin', async (t) => {
+  const { contract, silent} = t.context.accounts;
+  await silent.call(contract, "donateToProject", {project_index: "0"}, { attachedDeposit: NEAR.parse('0.1') });
+});
+
+// Prueba especifica: Proyecto creado por Semk y Donación hecha por ronin
+test('Proyecto creado por Semk', async (t) => {
+  const { contract, ronin, silent} = t.context.accounts;
+  let project_name = "Hamrbiento";
+  let description = "Con ganas de conocer mi mundo";
+  await ronin.call(contract, "createProyect", {project_name: project_name, description: description});
 });
