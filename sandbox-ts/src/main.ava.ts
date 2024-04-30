@@ -156,9 +156,9 @@ test('Proyecto creado por Semk', async (t) => {
 
 // Prueba especifica: Crear proyecto por Ronin
 test('Proyecto creado por Ronin', async (t) => {
-  const { contract, ronin} = t.context.accounts;
+  const { contract, ronin, silent} = t.context.accounts;
   let project_name = "Ambiguo";
   let description = "Desde lo mas profundo de mis sentimientos";
-  await ronin.call(contract, "createProyect", {project_name: project_name, description: description})
-  
+  await ronin.call(contract, "createProyect", {project_name: project_name, description: description});
+  await silent.call(contract, "donateToProject", {project_index: "0"});
 });

@@ -111,43 +111,43 @@ class ManagmentProject {
     near.log(`Se ha creado el proyecto ${project_name} que consiste en ${description}. El dueño es ${owner}. Índice del proyecto: ${projectIndex}`);
     }
 
-  // @call({ payableFunction: true })
-  // donateToProject({ project_index }: { project_index: number }): void {
-  //     // Obtiene el proyecto en el índice dado
-  //     const projects = this.proyects.toArray();
-  //     const project = projects[project_index]
+  @call({ payableFunction: true })
+  donateToProject({ project_index }: { project_index: number }): void {
+      // Obtiene el proyecto en el índice dado
+      const projects = this.proyects.toArray();
+      const project = projects[project_index]
 
-  //     near.log(`Se quiere donar al proyecto: ${project}`);
-  //     // Verificar si el índice del proyecto está dentro del rango válido
-  //     assert(project_index >= 0 && project_index < this.proyects.length, "Proyecto no encontrado");
+      near.log(`Se quiere donar al proyecto: ${project.name}`);
+      // Verificar si el índice del proyecto está dentro del rango válido
+      assert(project_index >= 0 && project_index < this.proyects.length, "Proyecto no encontrado");
 
-  //     // Obtiene la cuenta del donante
-  //     const donor = near.predecessorAccountId();
+      // Obtiene la cuenta del donante
+      const donor = near.predecessorAccountId();
 
-  //     // Obtiene el valor que se va a donar
-  //     let donationAmount: bigint = near.attachedDeposit() as bigint;
-  //     // Se crea una variable de apoyo para descontar el valor de almacenamiento 
-  //     let toTransfer = donationAmount;
-  //     // Se valida si el valor a donar es mayor al de almacenamiento
-  //     assert(donationAmount > STORAGE_COST, `El envío es de ${STORAGE_COST} yoctoNEAR`);
-  //     // Resta el costo de almacenamiento al monto a transferir
-  //     toTransfer -= STORAGE_COST
-  //     // Crea una nueva instancia de ProjectFunding y se envian los valores 
-  //     const projectFunding = new ProyectFunding(donor, project, toTransfer);
+      // Obtiene el valor que se va a donar
+      let donationAmount: bigint = near.attachedDeposit() as bigint;
+      // Se crea una variable de apoyo para descontar el valor de almacenamiento 
+      let toTransfer = donationAmount;
+      // Se valida si el valor a donar es mayor al de almacenamiento
+      assert(donationAmount > STORAGE_COST, `El envío es de ${STORAGE_COST} yoctoNEAR`);
+      // Resta el costo de almacenamiento al monto a transferir
+      toTransfer -= STORAGE_COST
+      // Crea una nueva instancia de ProjectFunding y se envian los valores 
+      const projectFunding = new ProyectFunding(donor, project, toTransfer);
 
-  //     // Crea un batch de promesas para transferir los fondos al dueño del proyecto, lo que indica que si alguna función no se ejecuta ninguna lo hará
-  //     const promise = near.promiseBatchCreate(project.account_id_owner);
-  //     near.promiseBatchActionTransfer(promise, toTransfer);
+      // Crea un batch de promesas para transferir los fondos al dueño del proyecto, lo que indica que si alguna función no se ejecuta ninguna lo hará
+      const promise = near.promiseBatchCreate(project.account_id_owner);
+      near.promiseBatchActionTransfer(promise, toTransfer);
 
-  //     // Actualiza el monto total donado al proyecto
-  //     project.total_amount += toTransfer;
+      // Actualiza el monto total donado al proyecto
+      //project.total_amount += toTransfer;
 
-  //     // Registra el proyecto de financiamiento
-  //     this.projectFundings.push(projectFunding);
+      // Registra el proyecto de financiamiento
+      this.projectFundings.push(projectFunding);
 
-  //     // Log para validar que se haya realizado la donación
-  //     near.log(`Se ha realizado una donación de ${toTransfer} NEAR al proyecto ${project.name} por ${donor}`);
-  //   }
+      // Log para validar que se haya realizado la donación
+      near.log(`Se ha realizado una donación de ${toTransfer} NEAR al proyecto ${project.name} por ${donor}`);
+    }
    
   // Ver todos los proyectos
   @view({})
@@ -155,23 +155,25 @@ class ManagmentProject {
       return this.proyects.toArray();
   }
 
-    // Ver el listado de proyectos de acuerdo al dueño
+  //  Ver el listado de proyectos de acuerdo al dueño
   @view({})
   getProjectsByOwner({ owner_id }: { owner_id: string }): Project[] {
-      let ownerProjects: Project[] = [];
-
+      const allProjects = this.proyects.toArray();
+      const ownerProjects : Project[] = [];
+      near.log(`Proyectos ${allProjects}`)
       // Filtrar los proyectos propiedad del dueño dado
       for (let i = 0; i < this.proyects.length; i++) {
-          const project = this.proyects[i];
-          if (project.account_id_owner === owner_id) {
+          let project = allProjects[i];
+          if (project.account_id_owner == owner_id) {
               ownerProjects.push(project);
           }
       }
 
       return ownerProjects;
     }
+    
 
-  // // Ver el total donado a un dueño (artista)
+  // Ver el total donado aa todos los proyectos de un artista
   // @view({})
   // getTotalDonatedToOwner({ owner_id }: { owner_id: string }): bigint {
   //     let totalDonatedToOwner: bigint;
@@ -180,7 +182,7 @@ class ManagmentProject {
   //     for (let i = 0; i < this.projectFundings.length; i++) {
   //         const funding = this.projectFundings[i];
   //         // Verificar si el dueño del proyecto coincide con el owner_id proporcionado
-  //         if (funding.proyect.account_id_owner === owner_id) {
+  //         if (funding.proyect.account_id_owner == owner_id) {
   //             totalDonatedToOwner += funding.total_amount;
   //         }
   //     }
@@ -196,12 +198,13 @@ class ManagmentProject {
   //     // Sumar todas las donaciones para el proyecto dado
   //     for (let i = 0; i < this.projectFundings.length; i++) {
   //         const funding = this.projectFundings[i];
-  //         if (funding.proyect.name === project_name) {
+  //         if (funding.proyect.name == project_name) {
   //             totalDonated += funding.total_amount;
   //         }
   //     }
 
   //     return totalDonated;
   // }
-  }
+
+}
 

@@ -74,7 +74,7 @@ cargo-near near create-dev-account use-random-account-id autogenerate-new-keypai
 Despliega tu contrato en un entorno de prueba, quite el los simbolos <luego de escribir la cuenta dentro>
 
 ```bash
-near deploy dynamic-jewel.testnet build/donate_to_artists.wasm 
+near deploy detailed-table.testnet build/donate_to_artists.wasm 
 ```
 
 ### 5. Realizar donación
@@ -95,19 +95,29 @@ near view <id-account-created> get_donations
 Llame la función que crea el proyecto y agregue los datos que desee
 
 ```bash
-near call dynamic-jewel.testnet createProyect '{"project_name": "nombre del proyecto", "description": "descripcion del proyecto"}' --accountId dynamic-jewel.testnet
+near call <id-account-created> createProyect '{"project_name": "nombre del proyecto", "description": "descripcion del proyecto"}' --accountId <dueño-proyecto>
 ---
 
 ### 8. Ver proyectos
 Con el siguiente comando podrá ver los proyectos creados
 
 ```bash
-near view dynamic-jewel.testnet get_donations
+near view <id-account-created> getAllProjects
 ---
+
+### 8. Ver proyectos por dueños de proyectos
+Con el siguiente comando podrá ver los proyectos creados por un dueño en especifico
+
+```bash
+near view <id-account-created> getProjectsByOwner '{"owner_id": "<dueño-proyecto>"}'
+---
+
+getProjectsByOwner
 
 ### 9. Fondear un proyecto
 Ahora llame la función que se encarga de crear el proyecto y agregue el indixe del proyecto el cual aparece en el log al crear el proyecto
 
 ```bash
-near call zonked-rod.testnet donateToProject '{"project_index": "0"}' --amount 1 --accountId zonked-rod.testnet
+near call <id-account-created> donateToProject '{"project_index": "0"}' --amount 0.01 --accountId <donador>
 ---
+
